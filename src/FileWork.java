@@ -8,42 +8,22 @@ public class FileWork {
     private static final ArrayList<String[]> array = new ArrayList<>();
     private static File file;
 
-    public static void addTariffFromMySrcFileInTariffList(String nameFile, TariffList tariffList) { // только для меня
+    public static void AddTariffViaMySrc(String nameFile, TariffList tariffList) { // только для меня
         file = new File(String.format("C:\\Users\\stepa\\IdeaProjects\\task1\\src\\%s", nameFile));
         AddElementsInTariffList(tariffList);
     }
 
-    public static void addTariffPathInTariffList(String pathToFile, TariffList tariffList) { // для всех
+    public static void AddTariffPathToFile(String pathToFile, TariffList tariffList) { // для всех
         file = new File(String.format("%s", pathToFile));
         AddElementsInTariffList(tariffList);
     }
 
-    private static void AddElementsInTariffList(TariffList tariffList) {
-        int countTariffs = 0;
-        Scanner scanner;
-        try {
-            scanner = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        while (scanner.hasNextLine()) {
-            countTariffs++;
-            array.add(scanner.nextLine().split(" "));
-        }
-        for (int i = 0; i < countTariffs; i++) {
-            Tariff tariff = new Tariff(array.get(i)[0], array.get(i)[1], Double.parseDouble(array.get(i)[2]));
-            tariffList.add(tariff);
-        }
-        scanner.close();
-    }
-
-    public static void AddElementsFromCodeToFile(TariffList tariffList) {
+    public static void addFromCodeToFile(TariffList tariffList) {
         File file = new File("C:\\Users\\stepa\\IdeaProjects\\task1\\src\\TariffsFromCode");
-        PrintWriter pw;
+        PrintWriter printWriter;
 
         try {
-            pw = new PrintWriter(file);
+            printWriter = new PrintWriter(file);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -52,8 +32,29 @@ public class FileWork {
             String directionCode = tariffList.getTariff(i).getDirectionCode();
             String nameOfTheDirection = tariffList.getTariff(i).getNameOfTheDirection();
             double pricePerMinute = tariffList.getTariff(i).getPricePerMinute();
-            pw.printf("%s %s %s\n", directionCode, nameOfTheDirection, pricePerMinute);
+            printWriter.printf("%s %s %s\n", directionCode, nameOfTheDirection, pricePerMinute);
         }
-        pw.close();
+        printWriter.close();
+    }
+    private static void AddElementsInTariffList(TariffList tariffList) {
+        Scanner scanner;
+
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        int index = 0;
+        while (scanner.hasNextLine()) {
+            array.add(scanner.nextLine().split(" "));
+            String directionCode = array.get(index)[0];
+            String nameOfTheDirection = array.get(index)[1];
+            double pricePerMinute = Double.parseDouble(array.get(index)[2]);
+            Tariff tariff = new Tariff(directionCode, nameOfTheDirection, pricePerMinute);
+            tariffList.add(tariff);
+            index++;
+        }
+        scanner.close();
     }
 }

@@ -35,10 +35,11 @@ public class Tariff {
         this.pricePerMinute = priceMinute;
     }
 
-    public double callCost(String code, int second) {
+    public static double callCost(String code, int second) {
+
         if (second < 6) {
             return 0;
         }
-        return TariffList.findPricePerMinute(code) * Math.ceil(second / 60.0);
+        return Math.ceil(second / 60.0) * TariffList.findPricePerMinute(code);
     }
 }

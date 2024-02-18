@@ -58,11 +58,9 @@ public class TariffList {
         for (Tariff tariff : tariffs) {
             if (tariff.getDirectionCode().equals(code)) {
                 return tariff.getPricePerMinute();
-            } else {
-                throw new RuntimeException("Такого кода не существует");
             }
         }
-        return -1;
+        throw new RuntimeException("Такого кода не существует");
     }
 
     private void checkIndex(int index) {
